@@ -351,7 +351,11 @@ setInterval(() => {
 function underwaterf() {
 setInterval(() => { 
     if(underwater == 1){  
-        
+
+      oxygen -= 1;
+        console.log(oxygen)
+        document.getElementById("oxygen").innerHTML = "Oxygen: " + oxygen + "%"
+      
         if(oxygen == 0){
             oxygen = 100
             alert("Oops you drowned!");
@@ -360,9 +364,6 @@ setInterval(() => {
             document.getElementById("deaths").innerHTML = "Deaths × " + deaths
         }
         
-        oxygen -= 1;
-        console.log(oxygen)
-        document.getElementById("oxygen").innerHTML = "Oxygen: " + oxygen + "%"
     }
     if(underwater == 0){
         oxygen = 100
