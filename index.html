@@ -1,0 +1,2041 @@
+<!DOCTYPE html>
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Bin Chilling</title>
+<style id="jsbin-css">
+* {
+  margin: 0;
+  padding: 0;
+}
+
+h1, form {
+  text-align: center;
+  color: orange
+}
+
+body {
+  background: #f2f2f2;
+}
+
+canvas {
+  display:block;
+  margin: auto;
+  border: 1px solid #333;
+  box-shadow: 0 0 16px 2px rgba(0,0,0,0.8);
+}
+
+p, a {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 19px;
+  color: #777;
+  display: block;
+  width: 400px;
+  margin: 0 auto;
+  text-align: center;
+  text-decoration:none;
+}
+
+.info {
+  margin:14px auto;
+  text-align: justify;
+  font-size: 18px;
+  color: #999;
+}
+
+a {
+  color:#3377ee;
+}
+
+td{
+    width: 33%;
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+
+.popup-content {
+  background: white;
+  width: 800px;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.close {
+  float: right;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+button{
+    display: block;
+    margin: auto;
+}
+
+.tooltip {
+  position: relative;           /* required to position the text */
+  display: inline-block;
+}
+
+/* Tooltip text */
+#speedrun-text {
+  visibility: hidden;           /* hidden by default */
+  width: 160px;                 /* set width if needed */
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 4px;
+
+  /* Position above the image */
+  position: absolute;
+  bottom: 125%;                 /* above the image */
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* Fade effect */
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+
+/* Show the tooltip text when hovering over the container */
+.tooltip:hover #speedrun-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+#deathless {
+  position: relative;           /* required to position the text */
+  display: inline-block;
+}
+
+/* Tooltip text */
+#deathless-text {
+  visibility: hidden;           /* hidden by default */
+  width: 160px;                 /* set width if needed */
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 4px;
+
+  /* Position above the image */
+  position: absolute;
+  bottom: 125%;                 /* above the image */
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* Fade effect */
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+
+/* Show the tooltip text when hovering over the container */
+#deathless:hover #deathless-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+#deaths_ach {
+  position: relative;           /* required to position the text */
+  display: inline-block;
+}
+
+/* Tooltip text */
+#deaths_ach-text {
+  visibility: hidden;           /* hidden by default */
+  width: 160px;                 /* set width if needed */
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 4px;
+
+  /* Position above the image */
+  position: absolute;
+  bottom: 125%;                 /* above the image */
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* Fade effect */
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+
+/* Show the tooltip text when hovering over the container */
+#deaths_ach:hover #deaths_ach-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+#coins {
+  position: relative;           /* required to position the text */
+  display: inline-block;
+}
+
+/* Tooltip text */
+#coins-text {
+  visibility: hidden;           /* hidden by default */
+  width: 160px;                 /* set width if needed */
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 4px;
+
+  /* Position above the image */
+  position: absolute;
+  bottom: 125%;                 /* above the image */
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* Fade effect */
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+
+/* Show the tooltip text when hovering over the container */
+#coins:hover #coins-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+#finish {
+  position: relative;           /* required to position the text */
+  display: inline-block;
+}
+
+/* Tooltip text */
+#finish-text {
+  visibility: hidden;           /* hidden by default */
+  width: 160px;                 /* set width if needed */
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 4px;
+
+  /* Position above the image */
+  position: absolute;
+  bottom: 125%;                 /* above the image */
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* Fade effect */
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+
+/* Show the tooltip text when hovering over the container */
+#finish:hover #finish-text {
+  visibility: visible;
+  opacity: 1;
+}
+</style>
+<link rel="icon" type="image/x-icon" href="favicon.png">
+</head>
+<body>
+<h1>Bin Chilling</h1>
+<br>
+<button onclick="openPopup()">Open achievements</button><br>
+
+<div id="popup" class="popup">
+  <div class="popup-content">
+    <span class="close" onclick="closePopup()">&times;</span>
+    <h2>Achievements</h2><br>
+    <p id="ach_count">0/5</p>
+    <div id="finish">
+    <img src="achievements/All lvls_locked.png" alt="" height="200px" id="all_lvls">
+    <span id="finish-text">Alfredo - Complete the game</span>
+    </div>
+    <div id="coins">
+    <img src="achievements/Coin-achvmnt_locked.png" alt="" height="200px" id="coin_achvmnt">
+    <span id="coins-text">Money money - Collect all the coins</span>
+    </div>
+    <div id="deathless">
+    <img src="achievements/deathless_locked.png" alt="" height="200px" id="deathless">
+    <span id="deathless-text">Get a life - Complete the game without dying a SINGLE time</span>
+    </div>
+    <div class="tooltip">
+    <img src="achievements/Speedrun_locked.png" alt="" height="200px" id="speedrun">
+    <span id="speedrun-text">Speedrunner I - Complete the game in less than xx minutes</span>
+    </div>
+    <div id="deaths_ach">
+    <img src="achievements/Deaths-locked.png" alt="" height="200px" id="deaths_ach">
+    <span id="deaths_ach-text">Skill issue - Die 100 times</span>
+    </div>
+    <!-- <img src="achievements/" alt=""> -->
+  </div>
+</div>
+<p id="levelName">a</p>
+<p id="objective">Coins × 0</p>
+<p id="deaths">Deaths × 0</p>
+<p id="oxygen">Oxygen: 100%</p><br><br>
+<canvas id="canvas"></canvas><br><br>
+<p>Use the arrow keys: left, right, up and down to move</p>
+  <audio loop autoplay>
+    <source src="audio/good.mp3" type="audio/mpeg">
+
+  </audio>
+  <p>You can double jump off of trampolines</p>
+<p class="info"></p>
+  <!-- <form name="name" action="">
+    <select name="mode" id="mode">
+    <option value="" >Select a game mode</option>
+    <option value="nolrmal">Normal Mode</option>
+    <option value="loop">Looping mode</option>
+  </select>
+  </form> -->
+
+
+<!-- <img src="deathless_locked.png" style="width: 80px; height:80px"> -->
+<br>
+<script src="achvmnt.js"></script>
+<script id="jsbin-javascript">
+
+
+function openPopup() {
+document.getElementById("popup").style.display = "block";
+}
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+var levelNameElement = document.getElementById("levelName");
+
+let form = document.forms['name'];
+
+let optionValue;
+
+let optionText;
+
+let deaths = 0;
+
+let level_now 
+
+let beaten_levels = 0;
+
+let seconds = 0;
+
+let oxygen = 100;
+
+let underwater = 0;
+
+let on = true;
+
+let gamekeys = 
+
+setInterval(() => {
+  seconds++;
+  //console.log(seconds);
+}, 1000);
+
+
+function underwaterf() {
+setInterval(() => { 
+    if(underwater == 1){  
+        
+        if(oxygen == 0){
+            oxygen = 100
+            alert("Oops you drowned!");
+            game.load_map(level_now); 
+            deaths += 1; 
+            document.getElementById("deaths").innerHTML = "Deaths × " + deaths
+        }
+        
+        oxygen -= 1;
+        console.log(oxygen)
+        document.getElementById("oxygen").innerHTML = "Oxygen: " + oxygen + "%"
+    }
+    if(underwater == 0){
+        oxygen = 100
+        document.getElementById("oxygen").innerHTML = "Oxygen: " + oxygen + "%"
+    }
+}, 175)
+    
+}
+
+underwaterf();
+
+// menu.onchange = function(){
+//   console.log("Step 1")
+//   optionValue = this.value;
+//   console.log(optionValue)
+//   optionText = this[this.selectedIndex].innerText;
+//   console.log(optionText)
+// };
+// console.log("Step 2");
+// console.log(optionText);
+
+let coins = 0;
+
+var map = {
+    tile_size: 16,
+    keys: [
+        {id: 0, colour: '#333', solid: 0},
+        {id: 1, colour: '#888', solid: 0, script: 'abovewater'},
+        {id: 2,colour: '#555',solid: 1,bounce: 0.35},
+        {id: 3,colour: 'rgba(121, 220, 242, 0.4)',friction: {x: 0.9,y: 0.9},gravity: {x: 0,y: 0.1},jump: 1,fore: 1,script: 'underwater'},
+        {id: 4,colour: '#777',jump: 1},
+        {id: 5,colour: '#E373FA',solid: 1,bounce: 111},
+        {id: 6,colour: '#666',solid: 1,bounce: 0},
+        {id: 7,colour: '#73C6FA',solid: 0,script: 'change_colour'},
+        {id: 8,colour: '#FADF73',solid: 0,script: 'next_level'},
+        {id: 9,colour: '#FF8300',solid: 0,script: 'death'},
+        {id: 10,colour: '#555',solid: 1},
+        {id: 11,colour: '#0FF',solid: 0,script: 'unlock'},
+        {id: 12,colour: '#cc67e1',solid: 1,bounce: 0},
+        {id: 13,colour: '#888',solid: 0,script:'current_level'},
+        {id: 14,colour: '#FFDD16',solid:0,script:'coin'}
+    ],
+
+    /* Maps data 0= Black block (solid), 1= air 2= Normal solid block 3= water 4=no collision block (lets you jump multiple times) 5= trampoline 6=same as 4 but it has collision 7=colour changer 8=goal 9=lava 10= same as 2 (become air when switch pressed) 11=switch 12 same as 6 but trampoline coloured*/
+  
+    data: [
+        [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 6, 6, 6, 6, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 13, 13, 13, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 4, 2, 2, 2, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 2, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 2, 1, 2, 2, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 2, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 2, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 2, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 2, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 2, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 2, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 2, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 2, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 2, 1, 2],
+        [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 2, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        [2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2],
+        [2, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2],
+        [2, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2],
+        [2, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 8, 1, 1, 1, 2],
+        [2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2],
+        [2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 9, 9, 9, 2, 10, 10, 10, 10, 10, 10, 1, 1, 1, 1, 1, 1, 1, 11, 2, 2, 2, 2, 4, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 10, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2],
+        [2, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 1, 1, 1, 1, 1, 1, 2],
+        [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2],
+        [2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 2, 2, 2, 2, 2, 2, 6, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+        [2, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 14, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 5, 5, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2],
+        [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 5, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2],
+        [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+    ],
+
+    /* Gravedad por defecto del mapa */
+    
+    gravity: {
+        x: 0,
+        y: 0.27
+    },
+    
+    /* Límites de velocidad */
+
+    vel_limit: {
+        x: 2.3,
+        y: 10
+    }, 
+
+    /* Velocidad del movimiento cuando la tecla es presionada */
+    
+    movement_speed: {
+        jump: 12,
+        left: 0.3,
+        right: 0.3
+    },
+    
+    /* Las coordenadas en las que cada jugador aparece, y el colour del jugador */
+
+    player: {
+        x: 2,
+        y: 15,
+        colour: '#C60000'
+    },
+    
+    /* scripts a los que hace referencia la variable "script" en las claves de mosaico */
+
+    scripts: {
+        current_level: 'levelNameElement.textContent = "Level 1: The Basics"; level_now = map',
+        /* puedes usar "this" en lugar de la variable de su motor ("game") */
+        change_colour: 'game.player.colour = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
+        /* podrías cargar una nueva variable de mapa aquí */
+        underwater: 'underwater = 1; underwaterf();',
+        abovewater: 'underwater = 0',
+        next_level: 'alert("You won! Onto the next level!");game.load_map(map2); beaten_levels += 1',
+        death: 'alert("Oops you lost!");game.load_map(map); deaths += 1; document.getElementById("deaths").innerHTML = "Deaths × " + deaths',
+        unlock: 'game.current_map.keys[10].solid = 0;game.current_map.keys[10].colour = "#888";',
+        coin:  'coins += 1; game.current_map.keys[14].colour = "#888"; game.current_map.keys[14].script = "current_level"; document.getElementById("objective").innerHTML = "Coins × " + coins',
+    }
+  
+};
+
+
+var map2 = {
+    tile_size: 16,    
+    keys: [
+        {id: 0, colour: '#333', solid: 0},
+        {id: 1, colour: '#888', solid: 0, script: 'abovewater'},
+        {id: 2,colour: '#555',solid: 1,bounce: 0.35},
+        {id: 3,colour: 'rgba(121, 220, 242, 0.4)',friction: {x: 0.9,y: 0.9},gravity: {x: 0,y: 0.1},jump: 1,fore: 1,script: 'underwater'},
+        {id: 4,colour: '#777',jump: 1},
+        {id: 5,colour: '#E373FA',solid: 1,bounce: 1.1},
+        {id: 6,colour: '#666',solid: 1,bounce: 0},
+        {id: 7,colour: '#73C6FA',solid: 0,script: 'change_colour'},
+        {id: 8,colour: '#FADF73',solid: 0,script: 'next_level'},
+        {id: 9,colour: '#FF8300',solid: 0,script: 'death'},
+        {id: 10,colour: '#555',solid: 1},
+        {id: 11,colour: '#0FF',solid: 0,script: 'unlock'},
+        {id: 12,colour: '#cc67e1',solid: 1,bounce: 0.1},
+        {id: 13,colour: '#888',solid: 0,script:'current_level'},
+        {id: 14,colour: '#E373FA',solid: 1},
+        {id: 15,colour: '#FFDD16',solid:0,script:'coin'}
+    ],
+
+    /* Maps data 0= Black block (solid), 1= air 2= Normal solid block 3= water 4=no collision block (lets you jump multiple times) 5= trampoline 6=same as 4 but it has collision 7=colour changer 8=goal 9=lava 10= same as 2 (become air when switch pressed) 11=switch*/
+  
+    data: [
+        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 12, 12, 12, 12, 12, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 1, 1, 1, 1, 1, 5, 5, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 7, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 13, 13, 13, 13, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 4, 5, 5, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 5, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 5, 1, 5, 12, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 5, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 5, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 5, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 5, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 5, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 5, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 5, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 5, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 5, 1, 5],
+        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 4, 5, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 4, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+        [5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 4, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1, 5],
+        [5, 1, 5, 5, 1, 1, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 4, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1, 5],
+        [5, 1, 5, 5, 5, 1, 1, 1, 1, 1, 5, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1, 5],
+        [5, 1, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 8, 1, 1, 1, 5],
+        [5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 12, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 1, 5, 5, 5, 5, 5, 12, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5],
+        [5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 9, 9, 9, 5, 14, 14, 14, 14, 14, 14, 1, 1, 1, 1, 1, 1, 1, 11, 5, 5, 5, 5, 4, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 14, 5, 5, 5, 12, 12, 12, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 5, 5, 5],
+        [5, 12, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 5],
+        [5, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 12, 12, 12, 5, 5, 5, 12, 12, 12, 12, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 12, 5],
+        [5, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 5, 1, 1, 1, 1, 15, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 12, 12, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 3, 3, 3, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 3, 3, 3, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 3, 3, 3, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 3, 3, 3, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5],
+        [5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 5, 1, 1, 1, 1, 1, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5],
+        [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+    ],
+
+
+
+
+
+    /* Gravedad por defecto del mapa */
+    
+    gravity: {
+        x: 0,
+        y: 0.27
+    },
+    
+    /* Límites de velocidad */
+
+    vel_limit: {
+        x: 2.3,
+        y: 7
+    }, 
+
+    /* Velocidad del movimiento cuando la tecla es presionada */
+    
+    movement_speed: {
+        jump: 6,
+        left: 0.3,
+        right: 0.3
+    },
+    
+    /* Las coordenadas en las que cada jugador aparece, y el colour del jugador */
+
+    player: {
+        x: 2,
+        y: 15,
+        colour: '#C60000'
+    },
+    
+    /* scripts a los que hace referencia la variable "script" en las claves de mosaico */
+
+    scripts: {
+      current_level: 'levelNameElement.textContent = "Level 2: Bounce! Bounce!"; level_now = map2',
+        /* puedes usar "this" en lugar de la variable de su motor ("game") */
+        change_colour: 'game.player.colour = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
+        /* podrías cargar una nueva variable de mapa aquí */
+        next_level: 'alert("You won! Onto the next level!");game.load_map(map3); beaten_levels += 1',
+        underwater: 'underwater = 1; underwaterf();',
+        abovewater: 'underwater = 0',
+        death: 'alert("Oops you lost!");game.load_map(map2); deaths += 1;  document.getElementById("deaths").innerHTML = "Deaths × " + deaths',
+        unlock: 'game.current_map.keys[14].solid = 0;game.current_map.keys[14].colour = "#888";',
+        coin:  'coins += 1; game.current_map.keys[15].colour = "#888"; game.current_map.keys[15].script = "current_level"; document.getElementById("objective").innerHTML = "Coins × " + coins'
+    }
+};
+
+var map3 = {
+    tile_size: 25,    
+    keys: [
+        {id: 0, colour: '#333', solid: 0},
+        {id: 1, colour: '#888', solid: 0, script: 'abovewater'},
+        {id: 2,colour: '#555',solid: 1,bounce: 0.35},
+        {id: 3,colour: 'rgba(121, 220, 242, 0.4)',friction: {x: 0.9,y: 0.9},gravity: {x: 0,y: 0.1},jump: 1,fore: 1,script: 'underwater'},
+        {id: 4,colour: '#777',jump: 1},
+        {id: 5,colour: '#E373FA',solid: 1,bounce: 1.1},
+        {id: 6,colour: '#666',solid: 1,bounce: 0},
+        {id: 7,colour: '#73C6FA',solid: 0,script: 'change_colour'},
+        {id: 8,colour: '#FADF73',solid: 0,script: 'next_level'},
+        {id: 9,colour: '#FF8300',solid: 0,script: 'death'},
+        {id: 10,colour: '#555',solid: 1},
+        {id: 11,colour: '#0FF',solid: 0,script: 'unlock'},
+        {id: 12,colour: '#cc67e1',solid: 1,bounce: 0},
+        {id: 13,colour: '#888',solid: 0,script:'current_level'},
+        {id: 14,colour: '#FFDD16',solid:0,script:'coin'}
+    ],
+
+    /* Maps data 0= Black block (solid), 1= air 2= Normal solid block 3= water 4=no collision block (lets you jump multiple times) 5= trampoline 6=same as 4 but it has collision 7=colour changer 8=goal 9=lava 10= same as 2 (become air when switch pressed) 11=switch*/
+  
+    data: [
+        [2,2,2,2,2,2,2,2,2,2,2,2],
+        [2,1,1,1,1,1,1,1,1,1,1,2],
+        [2,1,1,1,1,1,1,1,1,1,1,2],
+        [2,1,1,1,1,1,1,1,1,1,11,2],
+        [2,2,1,1,1,2,2,1,1,2,2,2],
+        [2,1,1,1,1,1,1,1,1,1,1,2],
+        [2,14,1,1,1,1,1,1,1,1,1,2],
+        [2,2,9,9,2,1,1,1,1,1,1,2],
+        [2,2,2,2,2,1,1,1,1,1,1,2],
+        [2,1,1,1,1,1,1,1,2,2,1,2],
+        [2,1,1,1,1,1,1,1,1,1,1,2,0,2,2,2,2,2,2,2,2],
+        [2,1,1,1,2,2,2,1,1,1,1,2,0,2,1,1,1,1,1,1,2],
+        [2,1,1,1,1,1,1,1,1,1,1,2,0,2,8,1,1,1,1,1,2],
+        [2,2,1,1,1,1,1,1,1,1,1,2,0,2,2,2,2,2,1,1,2],
+        [2,2,2,1,1,1,1,1,1,1,1,2,0,0,0,0,0,2,1,1,2],
+        [2,2,2,2,1,13,1,1,1,1,1,2,0,0,0,0,0,2,1,1,2],
+        [2,2,2,2,2,2,2,10,10,10,10,2,0,0,0,0,2,2,5,1,2],
+        [0,0,0,0,0,0,2,3,3,3,3,2,0,0,0,0,2,1,1,1,2],
+        [0,0,0,0,0,0,2,3,3,3,3,2,0,0,0,0,2,1,1,1,2],
+        [0,0,0,0,0,0,2,3,3,3,3,2,0,0,0,0,2,1,1,1,2],
+        [0,0,0,0,0,0,2,3,3,3,3,2,2,2,2,2,2,1,1,5,2],
+        [0,0,0,0,0,0,2,3,3,3,3,3,3,3,3,3,3,3,3,3,2],
+        [0,0,0,0,0,0,2,3,3,3,3,3,3,3,3,3,3,3,3,3,2],
+        [0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    ],
+
+
+
+
+
+    /* Gravedad por defecto del mapa */
+    
+    gravity: {
+        x: 0,
+        y: 0.27
+    },
+    
+    /* Límites de velocidad */
+
+    vel_limit: {
+        x: 2.3,
+        y: 16
+    }, 
+
+    /* Velocidad del movimiento cuando la tecla es presionada */
+    
+    movement_speed: {
+        jump: 8 ,
+        left: 0.3,
+        right: 0.3
+    },
+    
+    /* Las coordenadas en las que cada jugador aparece, y el colour del jugador */
+
+    player: {
+        x: 5,
+        y: 14,
+        colour: '#C60000'
+    },
+    
+    /* scripts a los que hace referencia la variable "script" en las claves de mosaico */
+
+    scripts: {
+      current_level: 'levelNameElement.textContent = "Level 3: So close yet so far!"; level_now = map3',
+        /* puedes usar "this" en lugar de la variable de su motor ("game") */
+        change_colour: 'game.player.colour = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
+        /* podrías cargar una nueva variable de mapa aquí */
+        next_level: 'alert("You won! Onto the next level!");game.load_map(map4); beaten_levels += 1',
+        underwater: 'underwater = 1; underwaterf();',
+        abovewater: 'underwater = 0',
+        death: 'alert("Oops you lost!");game.load_map(map3); deaths += 1;  document.getElementById("deaths").innerHTML = "Deaths × " + deaths',
+        unlock: 'game.current_map.keys[10].solid = 0;game.current_map.keys[10].colour = "#888";',
+        coin:  'coins += 1; game.current_map.keys[14].colour = "#888"; game.current_map.keys[14].script = "current_level"; document.getElementById("objective").innerHTML = "Coins × " + coins'
+    }
+};
+      
+var map4 = {
+    tile_size: 25,    
+    keys: [
+        {id: 0, colour: '#333', solid: 0},
+        {id: 1, colour: '#888', solid: 0, script: 'abovewater'},
+        {id: 2,colour: '#555',solid: 1,bounce: 0.35},
+        {id: 3,colour: 'rgba(121, 220, 242, 0.4)',friction: {x: 0.9,y: 0.9},gravity: {x: 0,y: 0.1},jump: 1,fore: 1,script: 'underwater'},
+        {id: 4,colour: '#777',jump: 1},
+        {id: 5,colour: '#E373FA',solid: 1,bounce: 1.1},
+        {id: 6,colour: '#666',solid: 1,bounce: 0},
+        {id: 7,colour: '#73C6FA',solid: 0,script: 'change_colour'},
+        {id: 8,colour: '#FADF73',solid: 0,script: 'next_level'},
+        {id: 9,colour: '#FF8300',solid: 0,script: 'death'},
+        {id: 10,colour: '#555',solid: 1},
+        {id: 11,colour: '#0FF',solid: 0,script: 'unlock'},
+        {id: 12,colour: '#cc67e1',solid: 1,bounce: 0},
+        {id: 13,colour: '#888',solid: 0,script:'current_level'},
+        {id: 14,colour: '#E7CE97',solid: 1},
+        {id: 15,colour: '#368723',solid: 0,script:'unlock_red'},
+        {id: 16,colour: '#1E88E5',solid: 0,script:'unlock_blue'},
+        {id: 17,colour: '#F9FF4A',solid: 0,script:'unlock_yellow'},
+        {id: 18,colour: '#E3F2FD',solid: 0,script:'unlock_wind'},
+        {id: 19,colour: '#888',solid: 0,},
+        {id: 20,colour: '#888',solid: 0,},
+        {id: 21,colour: '#888',solid: 0,},
+        {id: 22,colour: '#AEF59A',solid: 1},
+        {id: 23,colour: '#90CAF9',solid: 1},
+        {id: 24,colour: '#FFF9C4',solid: 1},
+        {id: 25,colour: '#FFDD16',solid:0,script:'coin'}
+    ],
+
+    /* Maps data 0= Black block (solid), 1= air 2= Normal solid block 3= water 4=no collision block (lets you jump multiple times) 5= trampoline 6=same as 4 but it has collision 7=colour changer 8=goal 9=lava 10= same as 2 (become air when switch pressed) 11=switch*/
+  
+    data: [
+        [14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14],
+        [14,1,1,23,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14],
+        [14,17,1,23,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14],
+        [14,14,14,14,20,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14],
+        [14,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14],
+        [14,1,1,1,20,20,1,1,1,1,1,1,1,1,1,1,1,1,1,14],
+        [14,1,25,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14],
+        [14,1,1,1,1,1,1,20,20,1,1,1,1,1,1,1,14,14,14,14],
+        [14,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,22,1,1,14],
+        [14,1,1,1,1,1,1,1,1,1,1,1,20,20,1,1,22,1,16,14],
+        [14,1,1,1,1,1,1,1,1,1,1,1,1,1,14,14,14,14,14,14],
+        [14,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14],
+        [14,1,1,1,1,1,1,1,1,1,19,19,1,1,1,1,1,1,1,14],
+        [14,1,1,1,1,1,1,1,1,1,1,1,1,1,19,1,1,1,15,14],
+        [14,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14,14,14,14],
+        [14,1,1,1,1,1,1,1,1,14,1,1,14,14,1,1,1,1,1,14],
+        [14,1,1,1,1,1,1,1,14,14,1,1,1,1,1,1,1,1,1,14],
+        [14,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14],
+        [14,1,1,1,1,14,14,1,1,1,1,1,1,1,1,1,1,1,1,14],
+        [14,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14],
+        [14,14,14,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14],
+        [14,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,14,14,14,14],
+        [14,1,1,1,1,14,14,1,1,1,1,1,1,1,1,1,24,1,1,14],
+        [14,1,9,9,1,1,1,1,1,13,1,1,1,1,1,1,24,1,8,14],
+        [14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14],
+    ],
+
+
+
+
+
+    /* Gravedad por defecto del mapa */
+    
+    gravity: {
+        x: -0.1,
+        y: 0.27
+    },
+    
+    /* Límites de velocidad */
+
+    vel_limit: {
+        x: 2.3,
+        y: 16
+    }, 
+
+    /* Velocidad del movimiento cuando la tecla es presionada */
+    
+    movement_speed: {
+        jump: 6,
+        left: 0.3,
+        right: 0.3
+    },
+    
+    /* Las coordenadas en las que cada jugador aparece, y el colour del jugador */
+
+    player: {
+        x: 9,
+        y: 23,
+        colour: '#C60000'
+    },
+    
+    /* scripts a los que hace referencia la variable "script" en las claves de mosaico */
+
+    scripts: {
+        current_level: 'levelNameElement.textContent = "Level 4: Dusty desert"; level_now = map4',
+        /* puedes usar "this" en lugar de la variable de su motor ("game") */
+        change_colour: 'game.player.colour = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
+        /* podrías cargar una nueva variable de mapa aquí */
+        next_level: 'alert("You won! Onto the next level!");game.load_map(map5); beaten_levels += 1',
+        underwater: 'underwater = 1; underwaterf();',
+        abovewater: 'underwater = 0',
+        death: 'alert("Oops you lost!");game.load_map(map4); game.current_map.keys[19].solid = 0;game.current_map.keys[19].colour = "#888"; game.current_map.keys[20].solid = 0;game.current_map.keys[20].colour = "#888"; game.current_map.keys[21].solid = 0;game.current_map.keys[21].colour = "#888"; deaths += 1;  document.getElementById("deaths").innerHTML = "Deaths × " + deaths',
+        unlock: 'game.current_map.keys[10].solid = 0;game.current_map.keys[10].colour = "#888";',
+        unlock_red: 'game.current_map.keys[22].solid = 0;game.current_map.keys[22].colour = "#888"; game.current_map.keys[19].solid = 1;game.current_map.keys[19].colour = "#AEF59A";',
+        unlock_blue: 'game.current_map.keys[23].solid = 0;game.current_map.keys[23].colour = "#888";game.current_map.keys[20].solid = 1;game.current_map.keys[20].colour = "#90CAF9";',
+        unlock_yellow: 'game.current_map.keys[24].solid = 0;game.current_map.keys[24].colour = "#888"; game.current_map.keys[21].solid = 1;game.current_map.keys[21].colour = "#FFF9C4";',
+        coin:  'coins += 1; game.current_map.keys[25].colour = "#888"; game.current_map.keys[25].script = "current_level"; document.getElementById("objective").innerHTML = "Coins × " + coins'
+    }
+};
+
+var map5 = {
+    tile_size: 25,    
+    keys: [
+        {id: 0, colour: '#333', solid: 0},
+        {id: 1, colour: '#888', solid: 0, script: 'abovewater'},
+        {id: 2,colour: '#555',solid: 1,bounce: 0.35},
+        {id: 3,colour: 'rgba(121, 220, 242, 0.4)',friction: {x: 0.9,y: 0.9},gravity: {x: 0,y: 0.1},jump: 1,fore: 1,script: 'underwater'},
+        {id: 4,colour: '#777',jump: 1},
+        {id: 5,colour: '#E373FA',solid: 1,bounce: 1.1},
+        {id: 6,colour: '#666',solid: 1,bounce: 0},
+        {id: 7,colour: '#73C6FA',solid: 0,script: 'change_colour'},
+        {id: 8,colour: '#FADF73',solid: 0,script: 'next_level'},
+        {id: 9,colour: '#FF8300',solid: 0,script: 'death'},
+        {id: 10,colour: '#555',solid: 1},
+        {id: 11,colour: '#0FF',solid: 0,script: 'unlock'},
+        {id: 12,colour: '#cc67e1',solid: 1,bounce: 0},
+        {id: 13,colour: '#888',solid: 0,script:'current_level'},
+        {id: 14,colour: '#E7CE97',solid: 1},
+        {id: 15,colour: '#368723',solid: 0,script:'unlock_red'},
+        {id: 16,colour: '#1E88E5',solid: 0,script:'unlock_blue'},
+        {id: 17,colour: '#F9FF4A',solid: 0,script:'unlock_yellow'},
+        {id: 18,colour: '#E3F2FD',solid: 0,script:'unlock_wind'},
+        {id: 19,colour: '#888',solid: 0,},
+        {id: 20,colour: '#888',solid: 0,},
+        {id: 21,colour: '#888',solid: 0,},
+        {id: 22,colour: '#AEF59A',solid: 1},
+        {id: 23,colour: '#90CAF9',solid: 1},
+        {id: 24,colour: '#FFF9C4',solid: 1},
+        {id: 25,colour: '#333',solid:0,script:'unlock_vision'},
+        {id: 26,colour: '#333',solid:0},
+        {id: 27,colour: '#333',solid:0},
+        {id: 28,colour: '#555',solid:0,script:'lock_vision'},
+        {id: 29,colour: '#333',solid:0,script:'unlock_vision_2'},
+        {id: 30,colour: '#333',solid:0},
+        {id: 31,colour: '#333',solid:0},
+        {id: 32,colour: '#333',solid:0,script:'teleport_orange'},
+        {id: 33,colour: '#333',solid:0},
+        {id: 34,colour: '#333',solid:0,script:'teleport_blue'},
+        {id: 35,colour: '#333',solid:0},
+        {id: 36,colour: '#FFDD16',solid:0,script:'coin'},
+        {id: 37,colour: '#888',solid:0,script:'lock_vision'},
+    ],
+
+    /* Maps data 0= Black block (solid), 1= air 2= Normal solid block 3= water 4=no collision block (lets you jump multiple times) 5= trampoline 6=same as 4 but it has collision 7=colour changer 8=goal 9=lava 10= same as 2 (become air when switch pressed) 11=switch*/
+  
+    data: [
+     [0,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0],
+     [0,2,2,2,2,2,2,2,1,37,37,1,2,26,26,26,26,26,26,26,26,26],
+     [0,2,1,1,1,1,1,22,1,37,37,1,28,25,27,27,27,27,27,27,27,26],
+     [0,2,1,1,1,1,1,22,1,1,1,1,28,25,27,27,27,27,27,27,27,26],
+     [0,2,1,1,1,2,2,2,1,13,1,1,2,26,26,26,26,26,27,27,27,26],
+     [0,2,1,1,1,2,0,2,2,23,23,2,2,0,0,0,0,26,27,27,27,26],
+     [0,2,1,1,1,2,0,0,2,1,1,2,0,0,0,0,0,26,27,27,27,26],
+     [0,2,1,1,1,2,0,0,2,1,1,2,0,0,0,0,0,26,27,27,27,26],
+     [0,2,1,1,1,2,0,0,2,1,1,2,0,0,0,0,0,26,27,27,27,26],
+     [0,2,16,1,5,2,0,0,2,1,1,2,0,0,0,0,0,26,27,27,27,26],
+     [0,2,2,2,2,2,0,0,2,1,1,2,0,0,0,0,0,26,27,27,27,26],
+     [0,0,0,0,0,0,0,0,2,1,1,2,0,30,30,30,30,26,27,27,27,26],
+     [0,0,0,0,0,0,0,0,2,1,1,2,0,30,31,31,31,29,27,27,27,26],
+     [0,0,0,0,0,0,0,0,2,8,8,2,0,30,31,31,31,29,27,15,5,26],
+     [30,30,30,30,30,0,0,0,2,2,2,2,0,30,31,31,30,26,26,26,26,26],
+     [30,35,35,35,30,0,0,0,0,0,0,0,0,30,31,31,30,0,0,0,0,0],
+     [30,31,31,31,30,0,0,0,0,0,0,0,0,30,31,31,30,0,0,0,0,0],
+     [30,31,31,31,30,0,0,0,0,0,0,0,0,30,31,31,30,0,0,0,0,0],
+     [30,31,31,31,30,0,0,0,0,0,0,0,0,30,31,31,30,0,0,0,0,0],
+     [30,31,36,31,30,0,0,0,0,0,0,0,0,30,31,31,30,0,0,0,0,0],
+     [30,31,31,31,30,0,0,0,0,0,0,0,0,30,31,31,30,0,0,0,0,0],
+     [30,32,32,32,30,0,0,0,0,0,0,0,0,30,34,34,30,0,0,0,0,0],
+     [30,30,30,30,30,0,0,0,0,0,0,0,0,30,30,30,30,0,0,0,0,0], 
+    ],
+
+
+
+
+
+    /* Gravedad por defecto del mapa */
+    
+    gravity: {
+        x: 0,
+        y: 0.27
+    },
+    
+    /* Límites de velocidad */
+
+    vel_limit: {
+        x: 2.3,
+        y: 16
+    }, 
+
+    /* Velocidad del movimiento cuando la tecla es presionada */
+    
+    movement_speed: {
+        jump: 6,
+        left: 0.3,
+        right: 0.3
+    },
+    
+    /* Las coordenadas en las que cada jugador aparece, y el colour del jugador */
+
+    player: {
+        x: 9,
+        y: 4,
+        colour: '#C60000'
+    },
+    
+    /* scripts a los que hace referencia la variable "script" en las claves de mosaico */
+
+    scripts: {
+        current_level: 'levelNameElement.textContent = "Level 5: Dysfunctional vision"; level_now = map5',
+        /* puedes usar "this" en lugar de la variable de su motor ("game") */
+        change_colour: 'game.player.colour = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
+        /* podrías cargar una nueva variable de mapa aquí */
+        next_level: 'alert("You won! Onto the next level!");game.load_map(map6); beaten_levels += 1',
+        underwater: 'underwater = 1; underwaterf();',
+        abovewater: 'underwater = 0',
+        death: 'alert("Oops you lost!");game.load_map(map5); game.current_map.keys[19].solid = 0;game.current_map.keys[19].colour = "#888"; game.current_map.keys[20].solid = 0;game.current_map.keys[20].colour = "#888"; game.current_map.keys[21].solid = 0;game.current_map.keys[21].colour = "#888"; deaths += 1;  document.getElementById("deaths").innerHTML = "Deaths × " + deaths',
+        unlock: 'game.current_map.keys[10].solid = 0;game.current_map.keys[10].colour = "#888";',
+        unlock_red: 'game.current_map.keys[22].solid = 0;game.current_map.keys[22].colour = "#888"; game.current_map.keys[19].solid = 1;game.current_map.keys[19].colour = "#368723";',
+        unlock_blue: 'game.current_map.keys[23].solid = 0;game.current_map.keys[23].colour = "#888";game.current_map.keys[20].solid = 1;game.current_map.keys[20].colour = "#90CAF9";',
+        unlock_yellow: 'game.current_map.keys[24].solid = 0;game.current_map.keys[24].colour = "#888"; game.current_map.keys[21].solid = 1;game.current_map.keys[21].colour = "#FFF9C4";',
+        unlock_vision: 'game.current_map.keys[26].solid = 1;game.current_map.keys[26].colour = "#555";game.current_map.keys[27].colour = "#888";game.current_map.keys[25].colour = "#888";game.current_map.keys[29].colour = "#555";',
+        unlock_vision_2: 'game.current_map.keys[30].solid = 1;game.current_map.keys[30].colour = "#555";game.current_map.keys[31].colour = "#888";game.current_map.keys[29].colour = "#888";game.current_map.keys[32].colour = "#F89200";game.current_map.keys[33].colour = "#F89200";game.current_map.keys[34].colour = "#19EBF1";game.current_map.keys[35].colour = "#19EBF1"',
+        lock_vision: 'game.current_map.keys[26].solid = 0;game.current_map.keys[26].colour = "#333";game.current_map.keys[27].colour = "#333";game.current_map.keys[25].colour = "#333";game.current_map.keys[29].solid = 0;game.current_map.keys[29].colour = "#333";game.current_map.keys[29].solid = 0;game.current_map.keys[30].colour = "#333";game.current_map.keys[31].colour = "#333";game.current_map.keys[32].colour = "#333";game.current_map.keys[35].colour = "#333";',   
+        teleport_orange: 'game.player.loc.y = 50; game.player.loc.x = 235',
+        teleport_blue: 'game.player.loc.y = 400;game.player.loc.x = 50',
+        coin:  'coins += 1; game.current_map.keys[36].colour = "#888"; game.current_map.keys[36].script = "current_level"; document.getElementById("objective").innerHTML = "Coins × " + coins',
+    }
+};
+
+
+var map6 = {
+
+tile_size: 11,    
+keys: [
+    {id: 0, colour: '#333', solid: 0},
+    {id: 1, colour: '#888', solid: 0, script: 'abovewater'},
+    {id: 2,colour: '#555',solid: 1,bounce: 0.35},
+    {id: 3,colour: 'rgba(121, 220, 242, 0.4)',friction: {x: 0.9,y: 0.9},gravity: {x: 0,y: 0.1},jump: 1,fore: 1,script: 'underwater'},
+    {id: 4,colour: '#777',jump: 1},
+    {id: 5,colour: '#E373FA',solid: 1,bounce: 1.1},
+    {id: 6,colour: '#666',solid: 1,bounce: 0},
+    {id: 7,colour: '#73C6FA',solid: 0,script: 'change_colour'},
+    {id: 8,colour: '#FADF73',solid: 0,script: 'next_level'},
+    {id: 9,colour: '#4AF51C',solid: 0,script: 'death'},
+    {id: 10,colour: '#555',solid: 1},
+    {id: 11,colour: '#0FF',solid: 0,script: 'unlock'},
+    {id: 12,colour: '#cc67e1',solid: 1,bounce: 0},
+    {id: 13,colour: '#888',solid: 0,script:'current_level'},
+    {id: 14,colour: '#E7CE97',solid: 1},
+    {id: 15,colour: '#368723',solid: 0,script:'unlock_red'},
+    {id: 16,colour: '#1E88E5',solid: 0,script:'unlock_blue'},
+    {id: 17,colour: '#F9FF4A',solid: 0,script:'unlock_yellow'},
+    {id: 18,colour: '#E3F2FD',solid: 0,script:'unlock_wind'},
+    {id: 19,colour: '#888',solid: 0,},
+    {id: 20,colour: '#888',solid: 0,},
+    {id: 21,colour: '#888',solid: 0,},
+    {id: 22,colour: '#368723',solid: 1},
+    {id: 23,colour: '#90CAF9',solid: 1},
+    {id: 24,colour: '#FFF9C4',solid: 1},
+    {id: 25,colour: '#333',solid:0,script:'unlock_vision'},
+    {id: 26,colour: '#333',solid:0},
+    {id: 27,colour: '#333',solid:0},
+    {id: 28,colour: '#555',solid:0,script:'lock_vision'},
+    {id: 29,colour: '#333',solid:0,script:'unlock_vision_2'},
+    {id: 30,colour: '#333',solid:0},
+    {id: 31,colour: '#333',solid:0},
+    {id: 32,colour: '#F89200',solid:0,script:'teleport_orange'},
+    {id: 33,colour: '#F89200',solid:0},
+    {id: 34,colour: '#19EBF1',solid:0,script:'teleport_blue'},
+    {id: 35,colour: '#19EBF1',solid:0},
+    {id: 36,colour: '#FFDD16',solid:0,script:'coin'},
+    {id: 37,colour: '#888',solid: 0,script:'objective'},
+    {id: 38,colour: '#EDFA43', solid: 0, script:'upside_down'},
+    {id: 39,colour: '#4383FA', solid: 0, script:'downside_down'},
+    {id: 40,colour: '#A20BED', solid: 0, script:'teleport_purple'},
+    {id: 41,colour: '#A20BED', solid: 0},
+    {id: 42,colour: '#368723',solid: 1},
+    {id: 43,colour: '#888', solid: 0, script:'teleport_gray'},
+    {id: 44,colour: '#888', solid: 0}
+],
+
+/* Maps data 0= Black block (solid), 1= air 2= Normal solid block 3= water 4=no collision block (lets you jump multiple times) 5= trampoline 6=same as 4 but it has collision 7=colour changer 8=goal 9=lava 10= same as 2 (become air when switch pressed) 11=switch*/
+
+data: [
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,8,22,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,22,22,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,32,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,32,2],
+    [2,1,1,1,13,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,1,1,1,1,1,1,2,9,9,9,2,1,1,1,1,2],
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,39,39,2,1,1,1,1,1,1,1,1,2],
+    [2,33,1,1,1,1,1,1,1,1,1,1,2,2,38,38,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,34,2],
+    [2,33,1,1,1,1,1,1,1,2,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,34,2],
+    [2,1,1,1,1,2,2,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,2],
+    [2,1,1,2,9,9,9,9,9,9,9,9,9,2,9,9,9,9,9,9,9,9,9,2,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,1,1,1,1,1,1,1,1,1,2,9,9,9,2,1,1,1,1,1,1,1,1,2,9,9,9,9,9,2,1,1,1,1,36,2],
+    [2,1,1,1,1,1,1,1,1,1,2,9,9,9,2,1,1,1,1,1,1,1,1,2,9,9,9,9,9,2,1,1,39,39,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,35,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,35,1,1,1,1,1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,39,39,1,2],
+    [2,1,1,1,1,1,2,2,38,38,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,2,1,1,1,1,2],
+    [2,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,2,1,1,1,1,2],
+    [2,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,2,40,40,40,40,2],
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,2,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,41,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,15,15,15,1,43,2],
+    [2,41,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,42,42,42,1,43,2],
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
+],
+
+
+
+
+
+/* Gravedad por defecto del mapa */
+
+gravity: {
+    x: 0,
+    y: 0.27
+},
+
+/* Límites de velocidad */
+
+vel_limit: {
+    x: 2.3,
+    y: 6
+}, 
+
+/* Velocidad del movimiento cuando la tecla es presionada */
+
+movement_speed: {
+    jump: 6,
+    left: 0.3,
+    right: 0.3
+},
+
+/* Las coordenadas en las que cada jugador aparece, y el colour del jugador */
+
+player: {
+    x: 4,
+    y: 4,
+    colour: '#C60000'
+},
+
+/* scripts a los que hace referencia la variable "script" en las claves de mosaico */
+    scripts: {
+        current_level: 'levelNameElement.textContent = "Level 6: Toxic wasteland"; level_now = map6',
+        objective: 'document.getElementById("objective").innerHTML = "Coins × " + coins',
+        /* puedes usar "this" en lugar de la variable de su motor ("game") */
+        change_colour: 'game.player.colour = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
+        /* podrías cargar una nueva variable de mapa aquí */
+        next_level: 'alert("You won! Onto the next level!");game.load_map(map7); beaten_levels += 1',
+        underwater: 'underwater = 1; underwaterf();',
+        abovewater: 'underwater = 0',
+        death: 'alert("Oops you lost!");game.load_map(map6); game.current_map.keys[19].solid = 0;game.current_map.keys[19].colour = "#888"; game.current_map.keys[20].solid = 0;game.current_map.keys[20].colour = "#888"; game.current_map.keys[21].solid = 0;game.current_map.keys[21].colour = "#888"; map6.gravity.y = 0.27; map6.movement_speed.jump = 6; deaths += 1;  document.getElementById("deaths").innerHTML = "Deaths × " + deaths',
+        unlock: 'game.current_map.keys[10].solid = 0;game.current_map.keys[10].colour = "#888";',
+        unlock_red: 'game.current_map.keys[22].solid = 0;game.current_map.keys[22].colour = "#888"; game.current_map.keys[19].solid = 1;game.current_map.keys[19].colour = "#368723"',
+        unlock_blue: 'game.current_map.keys[23].solid = 0;game.current_map.keys[23].colour = "#888";game.current_map.keys[20].solid = 1;game.current_map.keys[20].colour = "#90CAF9";',
+        unlock_yellow: 'game.current_map.keys[24].solid = 0;game.current_map.keys[24].colour = "#888"; game.current_map.keys[21].solid = 1;game.current_map.keys[21].colour = "#FFF9C4";',
+        unlock_vision: 'game.current_map.keys[26].solid = 1;game.current_map.keys[26].colour = "#555";game.current_map.keys[27].colour = "#888";game.current_map.keys[25].colour = "#888";game.current_map.keys[29].colour = "#555";',
+        unlock_vision_2: 'game.current_map.keys[30].solid = 1;game.current_map.keys[30].colour = "#555";game.current_map.keys[31].colour = "#888";game.current_map.keys[29].colour = "#888";game.current_map.keys[32].colour = "#F89200";game.current_map.keys[33].colour = "#F89200";game.current_map.keys[34].colour = "#19EBF1";game.current_map.keys[35].colour = "#19EBF1"',
+        lock_vision: 'game.current_map.keys[26].solid = 0;game.current_map.keys[26].colour = "#333";game.current_map.keys[27].colour = "#333";game.current_map.keys[25].colour = "#333";',   
+        teleport_orange: 'game.player.loc.y = 85; game.player.loc.x = 25',
+        teleport_blue: 'game.player.loc.y = 175;game.player.loc.x = 25',
+        teleport_purple: 'game.player.loc.y = 475;game.player.loc.x = 25',
+        teleport_gray: 'game.player.loc.y = 40;game.player.loc.x = 40',
+        coin:  'coins += 1; game.current_map.keys[36].colour = "#888"; game.current_map.keys[36].script = "current_level"; document.getElementById("objective").innerHTML = "Coins × " + coins',
+        upside_down : 'map6.gravity.y = -0.27; map6.movement_speed.jump = -6',
+        downside_down : 'map6.gravity.y = 0.27; map6.movement_speed.jump = 6',
+    }
+
+};
+
+    
+    
+            
+        
+
+
+var map7 = {
+    
+
+
+    tile_size: 24,    
+    keys: [
+        {id: 0, colour: '#333', solid: 0},
+        {id: 1, colour: '#888', solid: 0, script: 'abovewater'},
+        {id: 2,colour: '#555',solid: 1,bounce: 0.1},
+        {id: 3,colour: 'rgba(121, 220, 242, 0.4)',friction: {x: 0.9,y: 0.9},gravity: {x: 0,y: 0.1},jump: 1,fore: 1,script: 'underwater'},
+        {id: 4,colour: '#777',jump: 1},
+        {id: 5,colour: '#E373FA',solid: 1,bounce: 1.1},
+        {id: 6,colour: '#666',solid: 1,bounce: 0},
+        {id: 7,colour: '#73C6FA',solid: 0,script: 'change_colour'},
+        {id: 8,colour: '#FADF73',solid: 0,script: 'next_level'},
+        {id: 9,colour: '#FF8300',solid: 0,script: 'death'},
+        {id: 10,colour: '#555',solid: 1},
+        {id: 11,colour: '#0FF',solid: 0,script: 'unlock'},
+        {id: 12,colour: '#cc67e1',solid: 1,bounce: 0},
+        {id: 13,colour: '#888',solid: 0,script:'current_level'},
+        {id: 14,colour: '#E7CE97',solid: 1},
+        {id: 15,colour: '#368723',solid: 0,script:'unlock_red'},
+        {id: 16,colour: '#1E88E5',solid: 0,script:'unlock_blue'},
+        {id: 17,colour: '#F9FF4A',solid: 0,script:'unlock_yellow'},
+        {id: 18,colour: '#E3F2FD',solid: 0,script:'unlock_wind'},
+        {id: 19,colour: '#888',solid: 0,},
+        {id: 20,colour: '#888',solid: 0,},
+        {id: 21,colour: '#888',solid: 0,},
+        {id: 22,colour: '#368723',solid: 1},
+        {id: 23,colour: '#90CAF9',solid: 1},
+        {id: 24,colour: '#FFF9C4',solid: 1},
+        {id: 25,colour: '#333',solid:0,script:'unlock_vision'},
+        {id: 26,colour: '#333',solid:0},
+        {id: 27,colour: '#333',solid:0},
+        {id: 28,colour: '#555',solid:0,script:'lock_vision'},
+        {id: 29,colour: '#888',solid:0,script:'unlock_vision_2'},
+        {id: 30,colour: '#333',solid:0},
+        {id: 31,colour: '#333',solid:0},
+        {id: 32,colour: '#F89200',solid:0,script:'teleport_orange'},
+        {id: 33,colour: '#F89200',solid:0},
+        {id: 34,colour: '#19EBF1',solid:0,script:'teleport_blue'},
+        {id: 35,colour: '#19EBF1',solid:0},
+        {id: 36,colour: '#FFDD16',solid:0,script:'coin'},
+        {id: 37,colour: '#888',solid: 0,script:'objective'},
+        {id: 38,colour: '#EDFA43', solid: 0, script:'upside_down'},
+        {id: 39,colour: '#4383FA', solid: 0, script:'downside_down'},
+        {id: 40,colour: '#A20BED', solid: 0, script:'teleport_purple'},
+        {id: 41,colour: '#A20BED', solid: 0},
+        {id: 42,colour: '#368723',solid: 1},
+        {id: 43,colour: '#1411', solid: 0, script:'teleport_gray'},
+        {id: 44,colour: '#1411', solid: 0},
+        {id: 45,colour: '#4AF51C', solid: 0, script:'death'},
+        {id: 46,colour: '#FFFF70', solid: 0, script:'levitate'},
+        {id: 47,colour: '#FFD470', solid: 0,},
+        {id: 48,colour: '#888', solid: 0, script:'stop_levitate'},
+        {id: 49,colour: '#1A96A7', solid: 1},
+        {id: 50,colour: '#DE4223', solid: 0}, 
+        {id: 51,colour: '#CB99CC', solid: 1}, 
+    ],
+
+    /* Maps data 0= Black block (solid), 1= air 2= Normal solid block 3= water 4=no collision block (lets you jump multiple times) 5= trampoline 6=same as 4 but it has collision 7=colour changer 8=goal 9=lava 10= same as 2 (become air when switch pressed) 11=switch*/
+  
+    data: [
+     [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+     [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [2,1,1,1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [2,1,1,1,1,1,1,51,51,1,2,2,2,1,1,1,1,1,1,1,50,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [2,13,1,1,1,1,1,1,1,1,2,2,2,1,1,2,2,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,2],
+     [2,13,1,50,50,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [2,13,1,1,1,1,1,1,1,1,2,2,2,9,9,9,9,9,9,9,9,9,9,9,9,9,9,2,1,1,1,1,1,1,1,1,2],
+     [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,22,22,22,2,2,2,2,2,2,2,2,2,2],
+     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [0,0,0,0,0,0,0,0,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [0,0,0,0,0,0,0,0,26,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [0,0,0,0,0,0,0,0,26,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,30,30,30,30,30,30,30,30,30],
+     [0,0,0,0,0,0,0,0,26,16,27,27,27,27,27,27,26,27,27,27,27,27,27,27,27,27,27,27,27,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,28,29,31,31,31,31,31,31,31,31,30],
+     [0,0,0,0,0,0,0,0,26,26,26,27,50,50,27,27,27,27,27,27,50,50,27,27,27,27,27,27,27,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,28,29,31,31,31,31,31,31,31,36,30],
+     [0,0,0,0,0,0,0,0,26,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,25,28,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,30,30,30,30,30,30,30,30,30],
+     [0,0,0,0,0,0,0,0,26,23,23,27,27,27,27,27,27,51,51,27,27,27,27,27,27,27,27,27,25,28,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+     [0,0,0,0,0,0,0,0,26,8,23,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,2,1,1,1,1,1,1,1,1,5,1,1,1,1,1,1,2],
+     [0,0,0,0,0,0,0,0,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,26,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+
+     
+    ],
+
+
+
+
+
+    /* Gravedad por defecto del mapa */
+    
+    gravity: {
+        x: 0,
+        y: 0.27
+    },
+    
+    /* Límites de velocidad */
+
+    vel_limit: {
+        x: 2.3,
+        y: 10
+    }, 
+
+    /* Velocidad del movimiento cuando la tecla es presionada */
+    
+    movement_speed: {
+        jump: 6,
+        left: 0.3,
+        right: 0.3
+    },
+    
+    /* Las coordenadas en las que cada jugador aparece, y el colour del jugador */
+
+    player: {
+        x: 1,
+        y: 9,
+        colour: '#C60000'
+    },
+    
+    /* scripts a los que hace referencia la variable "script" en las claves de mosaico */
+        scripts: {
+          current_level: 'levelNameElement.textContent = "Level 7: On & Off"; level_now = map7; setInterval(() => {game.current_map.keys[50].solid = 1; game.current_map.keys[51].solid = 0; game.current_map.keys[50].colour = "#DE4223"; game.current_map.keys[51].colour = "#CB99CC";}, 700) ;setInterval(() => {game.current_map.keys[50].solid = 0; game.current_map.keys[51].solid = 1; game.current_map.keys[51].colour = "#A129A3"; game.current_map.keys[50].colour = "#E09C8B";}, 1400); game.current_map.keys[13].script = ""',
+          /* puedes usar "this" en lugar de la variable de su motor ("game") */
+          change_colour: 'game.player.colour = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
+          /* podrías cargar una nueva variable de mapa aquí */
+          next_level: 'alert("You won! Onto the next level!");game.load_map(map8);',
+          underwater: 'underwater = 1; underwaterf();',
+          abovewater: 'underwater = 0',
+          death: 'alert("Oops you lost!");game.load_map(map7); game.current_map.keys[19].solid = 0;game.current_map.keys[19].colour = "#888"; game.current_map.keys[20].solid = 0;game.current_map.keys[20].colour = "#888"; game.current_map.keys[21].solid = 0;game.current_map.keys[21].colour = "#888"; map.gravity.y = 0.27;  deaths =+ 1; document.getElementById("deaths").innerHTML = "Deaths × " + deaths',
+          unlock: 'game.current_map.keys[10].solid = 0;game.current_map.keys[10].colour = "#888";',
+          unlock_red: 'game.current_map.keys[22].solid = 0;game.current_map.keys[22].colour = "#888"; game.current_map.keys[19].solid = 1;game.current_map.keys[19].colour = "#368723";',
+          unlock_blue: 'game.current_map.keys[23].solid = 0;game.current_map.keys[23].colour = "#888";game.current_map.keys[20].solid = 1;game.current_map.keys[20].colour = "#90CAF9";',
+          unlock_yellow: 'game.current_map.keys[24].solid = 0;game.current_map.keys[24].colour = "#888"; game.current_map.keys[21].solid = 1;game.current_map.keys[21].colour = "#FFF9C4";',
+          unlock_vision: 'game.current_map.keys[26].solid = 1;game.current_map.keys[26].colour = "#555";game.current_map.keys[27].colour = "#888";game.current_map.keys[25].colour = "#888";game.current_map.keys[29].colour = "#555";',
+          unlock_vision_2: 'game.current_map.keys[30].solid = 1;game.current_map.keys[30].colour = "#555";game.current_map.keys[31].colour = "#888";game.current_map.keys[29].colour = "#888";game.current_map.keys[32].colour = "#F89200";game.current_map.keys[33].colour = "#F89200";game.current_map.keys[34].colour = "#19EBF1";game.current_map.keys[35].colour = "#19EBF1"',
+          lock_vision: 'game.current_map.keys[26].solid = 0;game.current_map.keys[26].colour = "#333";game.current_map.keys[27].colour = "#333";game.current_map.keys[25].colour = "#333";',   
+          teleport_orange: 'game.player.loc.y = 95; game.player.loc.x = 20',
+          teleport_blue: 'game.player.loc.y = 175;game.player.loc.x = 25',
+          teleport_purple: 'game.player.loc.y = 475;game.player.loc.x = 25',
+          teleport_gray: 'game.player.loc.y = 40;game.player.loc.x = 40',
+          coin:  'coins += 1; game.current_map.keys[36].colour = "#888"; game.current_map.keys[36].script = "current_level";  document.getElementById("objective").innerHTML = "Coins × " + coins',
+          upside_down : 'map7.gravity.y = -0.27; map7.movement_speed.jump = -6',
+          downside_down : 'map7.gravity.y = 0.27; map7.movement_speed.jump = 6',
+          levitate : 'map7.gravity.y = -0.05;',
+          stop_levitate : 'map7.gravity.y = 0.27;',
+        }
+    
+};
+
+var map8 = {
+    
+
+
+    tile_size: 20,    
+    keys: [
+        {id: 0, colour: '#333', solid: 0},
+        {id: 1, colour: '#888', solid: 0, script: 'abovewater'},
+        {id: 2,colour: '#555',solid: 1,bounce: 0.1},
+        {id: 3,colour: 'rgba(121, 220, 242, 0.4)',friction: {x: 0.9,y: 0.9},gravity: {x: 0,y: 0.1},jump: 1,fore: 1,script: 'underwater'},
+        {id: 4,colour: '#777',jump: 1},
+        {id: 5,colour: '#E373FA',solid: 1,bounce: 1.1},
+        {id: 6,colour: '#666',solid: 1,bounce: 0},
+        {id: 7,colour: '#73C6FA',solid: 0,script: 'change_colour'},
+        {id: 8,colour: '#FADF73',solid: 0,script: 'next_level'},
+        {id: 9,colour: '#FF8300',solid: 0,script: 'death'},
+        {id: 10,colour: '#555',solid: 1},
+        {id: 11,colour: '#0FF',solid: 0,script: 'unlock'},
+        {id: 12,colour: '#cc67e1',solid: 1,bounce: 0},
+        {id: 13,colour: '#888',solid: 0,script:'current_level'},
+        {id: 14,colour: '#E7CE97',solid: 1},
+        {id: 15,colour: '#368723',solid: 0,script:'unlock_red'},
+        {id: 16,colour: '#1E88E5',solid: 0,script:'unlock_blue'},
+        {id: 17,colour: '#F9FF4A',solid: 0,script:'unlock_yellow'},
+        {id: 18,colour: '#E3F2FD',solid: 0,script:'unlock_wind'},
+        {id: 19,colour: '#888',solid: 0,},
+        {id: 20,colour: '#888',solid: 0,},
+        {id: 21,colour: '#888',solid: 0,},
+        {id: 22,colour: '#368723',solid: 1},
+        {id: 23,colour: '#90CAF9',solid: 1},
+        {id: 24,colour: '#FFF9C4',solid: 1},
+        {id: 25,colour: '#333',solid:0,script:'unlock_vision'},
+        {id: 26,colour: '#333',solid:0},
+        {id: 27,colour: '#333',solid:0},
+        {id: 28,colour: '#555',solid:0,script:'lock_vision'},
+        {id: 29,colour: '#333',solid:0,script:'unlock_vision_2'},
+        {id: 30,colour: '#333',solid:0},
+        {id: 31,colour: '#333',solid:0},
+        {id: 32,colour: '#F89200',solid:0,script:'teleport_orange'},
+        {id: 33,colour: '#F89200',solid:0},
+        {id: 34,colour: '#19EBF1',solid:0,script:'teleport_blue'},
+        {id: 35,colour: '#19EBF1',solid:0},
+        {id: 36,colour: '#FFDD16',solid:0,script:'coin'},
+        {id: 37,colour: '#888',solid: 0,script:'objective'},
+        {id: 38,colour: '#EDFA43', solid: 0, script:'upside_down'},
+        {id: 39,colour: '#4383FA', solid: 0, script:'downside_down'},
+        {id: 40,colour: '#A20BED', solid: 0, script:'teleport_purple'},
+        {id: 41,colour: '#A20BED', solid: 0},
+        {id: 42,colour: '#368723',solid: 1},
+        {id: 43,colour: '#1411', solid: 0, script:'teleport_gray'},
+        {id: 44,colour: '#1411', solid: 0},
+        {id: 45,colour: '#4AF51C', solid: 0, script:'death'},
+        {id: 46,colour: '#FFFF70', solid: 0, script:'levitate'},
+        {id: 47,colour: '#FFD470', solid: 0,},
+        {id: 48,colour: '#888', solid: 0, script:'stop_levitate'},
+        {id: 49,colour: '#1A96A7', solid: 1},
+        {id: 50,colour: '#DE4223', solid: 0}, 
+        {id: 51,colour: '#CB99CC', solid: 1},
+        {id: 52,colour: '#888', solid: 0, script:'donut1'},//52 to 55 1st donut block /trigger1
+        {id: 53,colour: '#C4970C', solid: 1},//1st block
+        {id: 54,colour: '#888', solid: 0},//1st fall
+        {id: 55,colour: '#888', solid: 0},//2nd fall
+        {id: 56,colour: '#888', solid: 0, script:'donut2'},//56 to 58 2nd donut block /trigger2
+        {id: 57,colour: '#C4970C', solid: 1},//2nd block
+        {id: 58,colour: '#888', solid: 0},//1st fall 2nd block
+        {id: 59,colour: '#888', solid: 0},//2nd fall 2nd block
+        
+    ],
+
+    /* Maps data 0= Black block (solid), 1= air 2= Normal solid block 3= water 4=no collision block (lets you jump multiple times) 5= trampoline 6=same as 4 but it has collision 7=colour changer 8=goal 9=lava 10= same as 2 (become air when switch pressed) 11=switch*/
+  
+    data: [
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,24,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,52,1,1,1,1,56,1,1,1,1,1,1,1,1,1,1,1,1,1,1,24,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,36,2],    
+    [2,1,1,1,1,1,56,1,2,1,1,1,1,53,1,1,1,1,57,1,1,1,1,2,1,1,1,1,1,1,1,1,1,24,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2],
+    [2,1,1,52,1,1,57,1,2,1,1,1,1,54,1,1,1,1,58,1,1,1,1,2,1,16,1,1,17,1,16,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,52,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,53,1,1,58,1,2,1,1,1,1,55,1,1,1,1,59,1,1,1,1,2,23,23,23,23,23,23,23,23,23,2,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,53,1,1,1,1,1,56,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,54,1,1,59,1,2,9,9,9,9,9,9,9,9,9,9,9,9,9,9,2,45,45,45,45,45,45,45,45,45,2,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,54,1,1,1,1,1,57,1,1,1,1,1,1,1,1,1,2],
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,55,1,1,1,1,1,58,1,1,1,1,1,2,1,1,1,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,59,1,1,1,1,1,1,1,1,1,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,52,1,1,1,1,1,1,1,1,1,1,1,56,1,1,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,53,1,1,1,1,1,1,1,1,1,1,1,57,1,1,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,54,1,1,1,1,1,1,1,1,1,1,1,58,1,1,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,55,1,1,1,1,1,1,1,1,1,1,1,59,1,1,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,2,1,2,1,1,1,1,1,1,1,1,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,9,9,9,9,9,9,9,9,2,1,2,9,9,9,9,9,9,9,9,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,1,1,1,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,2,2,2,2,3,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,2,1,1,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,2,1,1,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,2,1,1,1,2,3,3,3,3,3,3,2,2,2,2,2,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,1,1,1,8,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,1,1,1,1,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    ],
+
+
+
+
+
+    /* Gravedad por defecto del mapa */
+    
+    gravity: {
+        x: 0,
+        y: 0.27
+    },
+    
+    /* Límites de velocidad */
+
+    vel_limit: {
+        x: 2.3,
+        y: 10
+    }, 
+
+    /* Velocidad del movimiento cuando la tecla es presionada */
+    
+    movement_speed: {
+        jump: 6.5,
+        left: 0.6,
+        right: 0.6
+    },
+    
+    /* Las coordenadas en las que cada jugador aparece, y el colour del jugador */
+
+    player: {
+        x: 1,
+        y: 6,
+        colour: '#C60000'
+    },
+    
+    /* scripts a los que hace referencia la variable "script" en las claves de mosaico */
+        scripts: {
+          current_level: 'levelNameElement.textContent = "Level 8: Stay on your feet!"; level_now = map8; setInterval(() => {game.current_map.keys[50].solid = 1; game.current_map.keys[51].solid = 0; game.current_map.keys[50].colour = "#DE4223"; game.current_map.keys[51].colour = "#CB99CC";}, 700) ;setInterval(() => {game.current_map.keys[50].solid = 0; game.current_map.keys[51].solid = 1; game.current_map.keys[51].colour = "#A129A3"; game.current_map.keys[50].colour = "#E09C8B";}, 1400)',
+          /* puedes usar "this" en lugar de la variable de su motor ("game") */
+          change_colour: 'game.player.colour = "#"+(Math.random()*0xFFFFFF<<0).toString(16);',
+          /* podrías cargar una nueva variable de mapa aquí */
+          next_level: 'alert("You won! Onto the next level!");game.load_map(map8);',
+          underwater: 'underwater = 1; underwaterf();',
+          abovewater: 'underwater = 0',
+          death: 'alert("Oops you lost!");game.load_map(map8); game.current_map.keys[19].solid = 0;game.current_map.keys[19].colour = "#888"; game.current_map.keys[20].solid = 0;game.current_map.keys[20].colour = "#888"; game.current_map.keys[21].solid = 0;game.current_map.keys[21].colour = "#888"; map.gravity.y = 0.27;  game.current_map.keys[23].solid = 1;game.current_map.keys[23].colour = "#90CAF9"; deaths =+ 1; document.getElementById("deaths").innerHTML = "Deaths × " + deaths',
+          unlock: 'game.current_map.keys[10].solid = 0;game.current_map.keys[10].colour = "#888";',
+          unlock_red: 'game.current_map.keys[22].solid = 0;game.current_map.keys[22].colour = "#888"; game.current_map.keys[19].solid = 1;game.current_map.keys[19].colour = "#368723";',
+          unlock_blue: 'game.current_map.keys[23].solid = 0;game.current_map.keys[23].colour = "#888";game.current_map.keys[20].solid = 1;game.current_map.keys[20].colour = "#90CAF9";',
+          unlock_yellow: 'game.current_map.keys[24].solid = 0;game.current_map.keys[24].colour = "#888"; game.current_map.keys[21].solid = 1;game.current_map.keys[21].colour = "#FFF9C4";',
+          unlock_vision: 'game.current_map.keys[26].solid = 1;game.current_map.keys[26].colour = "#555";game.current_map.keys[27].colour = "#888";game.current_map.keys[25].colour = "#888";game.current_map.keys[29].colour = "#555";',
+          unlock_vision_2: 'game.current_map.keys[30].solid = 1;game.current_map.keys[30].colour = "#555";game.current_map.keys[31].colour = "#888";game.current_map.keys[29].colour = "#888";game.current_map.keys[32].colour = "#F89200";game.current_map.keys[33].colour = "#F89200";game.current_map.keys[34].colour = "#19EBF1";game.current_map.keys[35].colour = "#19EBF1"',
+          lock_vision: 'game.current_map.keys[26].solid = 0;game.current_map.keys[26].colour = "#333";game.current_map.keys[27].colour = "#333";game.current_map.keys[25].colour = "#333";',   
+          teleport_orange: 'game.player.loc.y = 95; game.player.loc.x = 20',
+          teleport_blue: 'game.player.loc.y = 175;game.player.loc.x = 25',
+          teleport_purple: 'game.player.loc.y = 475;game.player.loc.x = 25',
+          teleport_gray: 'game.player.loc.y = 40;game.player.loc.x = 40',
+          coin:  'coins += 1; game.current_map.keys[36].colour = "#888"; game.current_map.keys[36].script = "current_level";  document.getElementById("objective").innerHTML = "Coins × " + coins',
+          upside_down : 'map8.gravity.y = -0.27; map8.movement_speed.jump = -6',
+          downside_down : 'map8.gravity.y = 0.27; map8.movement_speed.jump = 6',
+          levitate : 'map8.gravity.y = -0.05;',
+          stop_levitate : 'map8.gravity.y = 0.27;',
+          checkpoint : 'map.player.x = 5; map.player.y = 3;',
+          donut1 : 'game.current_map.keys[52].script = ""; setTimeout(() => {game.current_map.keys[53].solid = 0; game.current_map.keys[53].colour = "#888"; game.current_map.keys[54].solid = 1; game.current_map.keys[54].colour = "#C4970C";},1000); setTimeout(() => {game.current_map.keys[54].solid = 0; game.current_map.keys[54].colour = "#888"; game.current_map.keys[55].solid = 1; game.current_map.keys[55].colour = "#C4970C"}, 1200); setTimeout(() => {game.current_map.keys[55].solid = 0; game.current_map.keys[55].colour = "#888";},1400); setTimeout(() => {game.current_map.keys[52].script = "donut1"; game.current_map.keys[55].solid = 0; game.current_map.keys[55].colour = "#888"; game.current_map.keys[53].solid = 1; game.current_map.keys[53].colour = "#C4970C";},3000)',
+          donut2 : 'game.current_map.keys[56].script = ""; setTimeout(() => {game.current_map.keys[57].solid = 0; game.current_map.keys[57].colour = "#888"; game.current_map.keys[58].solid = 1; game.current_map.keys[58].colour = "#C4970C";},1000); setTimeout(() => {game.current_map.keys[58].solid = 0; game.current_map.keys[58].colour = "#888"; game.current_map.keys[59].solid = 1; game.current_map.keys[59].colour = "#C4970C"}, 1200); setTimeout(() => {game.current_map.keys[59].solid = 0; game.current_map.keys[59].colour = "#888";},1400); setTimeout(() => {game.current_map.keys[56].script = "donut2"; game.current_map.keys[59].solid = 0; game.current_map.keys[59].colour = "#888"; game.current_map.keys[57].solid = 1; game.current_map.keys[57].colour = "#C4970C";},3000)',
+        }
+    
+};
+
+//Achievement shit
+
+
+
+/* Motor de claridad */
+
+var Clarity = function () {
+
+    this.alert_errors   = false;
+    this.log_info       = true;
+    this.tile_size      = 16;
+    this.limit_viewport = false;
+    this.jump_switch    = 0;
+    
+    this.viewport = {
+        x: 200,
+        y: 200
+    };
+    
+    this.camera = {
+        x: 0,
+        y: 0
+    };
+    
+    this.key = {
+        left: false,
+        right: false,
+        up: false,
+        down: false,
+        reset: false,
+    };
+
+    this.player = {
+
+        loc: {
+            x: 0,
+            y: 0
+        },
+        
+        vel: {
+            x: 0,
+            y: 0
+        },
+        
+        can_jump: true
+    };
+
+    window.onkeydown = this.keydown.bind(this);
+    window.onkeyup   = this.keyup.bind(this);
+};
+
+Clarity.prototype.error = function (message) {
+
+    if (this.alert_errors) alert(message);
+    if (this.log_info) console.log(message);
+};
+
+Clarity.prototype.log = function (message) {
+
+    if (this.log_info) console.log(message);
+};
+
+Clarity.prototype.set_viewport = function (x, y) {
+
+    this.viewport.x = x;
+    this.viewport.y = y;
+};
+
+Clarity.prototype.keydown = function (e) {
+
+    var _this = this;
+
+    switch (e.keyCode) {
+    case 37:
+        _this.key.left = true;
+        break;
+    case 38:
+        _this.key.up = true;
+        break;
+    case 39:
+        _this.key.right = true;
+        break;
+    case 40:
+        _this.key.down = true;
+        break;
+    case 41:
+        _this.key.reset = true
+    }
+};
+
+Clarity.prototype.keyup = function (e) {
+
+    var _this = this;
+
+    switch (e.keyCode) {
+    case 37:
+        _this.key.left = false;
+        break;
+    case 38:
+        _this.key.up = false;
+        break;
+    case 39:
+        _this.key.right = false;
+        break;
+    case 40:
+        _this.key.down = false;
+        break;
+    case 41:
+        _this.key.reset = true
+    }
+    
+};
+
+Clarity.prototype.load_map = function (map) {
+
+    if (typeof map      === 'undefined'
+     || typeof map.data === 'undefined'
+     || typeof map.keys === 'undefined') {
+
+        this.error('Error: Invalid map data!');
+
+        return false;
+    }
+
+    this.current_map = map;
+
+    this.current_map.background = map.background || '#333';
+    this.current_map.gravity = map.gravity || {x: 0, y: 0.3};
+    this.tile_size = map.tile_size || 16;
+
+    var _this = this;
+    
+    this.current_map.width = 0;
+    this.current_map.height = 0;
+
+    map.keys.forEach(function (key) {
+
+        map.data.forEach(function (row, y) {
+            
+            _this.current_map.height = Math.max(_this.current_map.height, y);
+
+            row.forEach(function (tile, x) {
+                
+                _this.current_map.width = Math.max(_this.current_map.width, x);
+
+                if (tile == key.id)
+                    _this.current_map.data[y][x] = key;
+            });
+        });
+    });
+    
+    this.current_map.width_p = this.current_map.width * this.tile_size;
+    this.current_map.height_p = this.current_map.height * this.tile_size;
+
+    this.player.loc.x = map.player.x * this.tile_size || 0;
+    this.player.loc.y = map.player.y * this.tile_size || 0;
+    this.player.colour = map.player.colour || '#000';
+  
+    this.key.left  = false;
+    this.key.up    = false;
+    this.key.right = false;
+    this.key.down  = false;
+    this.key.reset = false
+    
+    this.camera = {
+        x: 0,
+        y: 0
+    };
+    
+    this.player.vel = {
+        x: 0,
+        y: 0
+    };
+
+    this.log('Successfully loaded map data.');
+
+    return true;
+};
+
+Clarity.prototype.get_tile = function (x, y) {
+
+    return (this.current_map.data[y] && this.current_map.data[y][x]) ? this.current_map.data[y][x] : 0;
+};
+
+Clarity.prototype.draw_tile = function (x, y, tile, context) {
+
+    if (!tile || !tile.colour) return;
+
+    context.fillStyle = tile.colour;
+    context.fillRect(
+        x,
+        y,
+        this.tile_size,
+        this.tile_size
+    );
+};
+
+Clarity.prototype.draw_map = function (context, fore) {
+
+    for (var y = 0; y < this.current_map.data.length; y++) {
+
+        for (var x = 0; x < this.current_map.data[y].length; x++) {
+
+            if ((!fore && !this.current_map.data[y][x].fore) || (fore && this.current_map.data[y][x].fore)) {
+
+                var t_x = (x * this.tile_size) - this.camera.x;
+                var t_y = (y * this.tile_size) - this.camera.y;
+                
+                if(t_x < -this.tile_size
+                || t_y < -this.tile_size
+                || t_x > this.viewport.x
+                || t_y > this.viewport.y) continue;
+                
+                this.draw_tile(
+                    t_x,
+                    t_y,
+                    this.current_map.data[y][x],
+                    context
+                );
+            }
+        }
+    }
+
+    if (!fore) this.draw_map(context, true);
+};
+
+Clarity.prototype.move_player = function () {
+
+    var tX = this.player.loc.x + this.player.vel.x;
+    var tY = this.player.loc.y + this.player.vel.y;
+
+    var offset = Math.round((this.tile_size / 2) - 1);
+
+    var tile = this.get_tile(
+        Math.round(this.player.loc.x / this.tile_size),
+        Math.round(this.player.loc.y / this.tile_size)
+    );
+     
+    if(tile.gravity) {
+        
+        this.player.vel.x += tile.gravity.x;
+        this.player.vel.y += tile.gravity.y;
+        
+    } else {
+        
+        this.player.vel.x += this.current_map.gravity.x;
+        this.player.vel.y += this.current_map.gravity.y;
+    }
+    
+    if (tile.friction) {
+
+        this.player.vel.x *= tile.friction.x;
+        this.player.vel.y *= tile.friction.y;
+    }
+
+    var t_y_up   = Math.floor(tY / this.tile_size);
+    var t_y_down = Math.ceil(tY / this.tile_size);
+    var y_near1  = Math.round((this.player.loc.y - offset) / this.tile_size);
+    var y_near2  = Math.round((this.player.loc.y + offset) / this.tile_size);
+
+    var t_x_left  = Math.floor(tX / this.tile_size);
+    var t_x_right = Math.ceil(tX / this.tile_size);
+    var x_near1   = Math.round((this.player.loc.x - offset) / this.tile_size);
+    var x_near2   = Math.round((this.player.loc.x + offset) / this.tile_size);
+
+    var top1    = this.get_tile(x_near1, t_y_up);
+    var top2    = this.get_tile(x_near2, t_y_up);
+    var bottom1 = this.get_tile(x_near1, t_y_down);
+    var bottom2 = this.get_tile(x_near2, t_y_down);
+    var left1   = this.get_tile(t_x_left, y_near1);
+    var left2   = this.get_tile(t_x_left, y_near2);
+    var right1  = this.get_tile(t_x_right, y_near1);
+    var right2  = this.get_tile(t_x_right, y_near2);
+
+
+    if (tile.jump && this.jump_switch > 16) {
+
+        this.player.can_jump = true;
+        
+        this.jump_switch = 0;
+        
+    } else this.jump_switch++;
+    
+    this.player.vel.x = Math.min(Math.max(this.player.vel.x, -this.current_map.vel_limit.x), this.current_map.vel_limit.x);
+    this.player.vel.y = Math.min(Math.max(this.player.vel.y, -this.current_map.vel_limit.y), this.current_map.vel_limit.y);
+    
+    this.player.loc.x += this.player.vel.x;
+    this.player.loc.y += this.player.vel.y;
+    
+    this.player.vel.x *= .9;
+    
+    if (left1.solid || left2.solid || right1.solid || right2.solid) {
+
+        /* arreglar superposición */
+
+        while (this.get_tile(Math.floor(this.player.loc.x / this.tile_size), y_near1).solid
+            || this.get_tile(Math.floor(this.player.loc.x / this.tile_size), y_near2).solid)
+            this.player.loc.x += 0.1;
+
+        while (this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near1).solid
+            || this.get_tile(Math.ceil(this.player.loc.x / this.tile_size), y_near2).solid)
+            this.player.loc.x -= 0.1;
+
+        /* rebote de baldosas */
+
+        var bounce = 0;
+
+        if (left1.solid && left1.bounce > bounce) bounce = left1.bounce;
+        if (left2.solid && left2.bounce > bounce) bounce = left2.bounce;
+        if (right1.solid && right1.bounce > bounce) bounce = right1.bounce;
+        if (right2.solid && right2.bounce > bounce) bounce = right2.bounce;
+
+        this.player.vel.x *= -bounce || 0;
+        
+    }
+    
+    if (top1.solid || top2.solid || bottom1.solid || bottom2.solid) {
+
+        /* arreglar superposición */
+        
+        while (this.get_tile(x_near1, Math.floor(this.player.loc.y / this.tile_size)).solid
+            || this.get_tile(x_near2, Math.floor(this.player.loc.y / this.tile_size)).solid)
+            this.player.loc.y += 0.1;
+
+        while (this.get_tile(x_near1, Math.ceil(this.player.loc.y / this.tile_size)).solid
+            || this.get_tile(x_near2, Math.ceil(this.player.loc.y / this.tile_size)).solid)
+            this.player.loc.y -= 0.1;
+
+        /* rebote de baldosas */
+        
+        var bounce = 0;
+        
+        if (top1.solid && top1.bounce > bounce) bounce = top1.bounce;
+        if (top2.solid && top2.bounce > bounce) bounce = top2.bounce;
+        if (bottom1.solid && bottom1.bounce > bounce) bounce = bottom1.bounce;
+        if (bottom2.solid && bottom2.bounce > bounce) bounce = bottom2.bounce;
+        
+        this.player.vel.y *= -bounce || 0;
+
+        if (this.current_map.gravity.y == 0.27 && (bottom1.solid || bottom2.solid ) && !tile.jump) {
+            
+            this.player.on_floor = true;
+            this.player.can_jump = true;
+        }
+      
+      if(this.current_map.gravity.y == -0.27 && (top1.solid) && !tile.jump){
+          
+          this.player.on_floor = true;
+          this.player.can_jump = true;
+        }
+        
+        
+    }
+    
+    // ajustar cámara
+
+    var c_x = Math.round(this.player.loc.x - this.viewport.x/2);
+    var c_y = Math.round(this.player.loc.y - this.viewport.y/2);
+    var x_dif = Math.abs(c_x - this.camera.x);
+    var y_dif = Math.abs(c_y - this.camera.y);
+    
+    if(x_dif > 5) {
+        
+        var mag = Math.round(Math.max(1, x_dif * 0.1));
+    
+        if(c_x != this.camera.x) {
+            
+            this.camera.x += c_x > this.camera.x ? mag : -mag;
+            
+            if(this.limit_viewport) {
+                
+                this.camera.x = 
+                    Math.min(
+                        this.current_map.width_p - this.viewport.x + this.tile_size,
+                        this.camera.x
+                    );
+                
+                this.camera.x = 
+                    Math.max(
+                        0,
+                        this.camera.x
+                    );
+            }
+        }
+    }
+    
+    if(y_dif > 5) {
+        
+        var mag = Math.round(Math.max(1, y_dif * 0.1));
+        
+        if(c_y != this.camera.y) {
+            
+            this.camera.y += c_y > this.camera.y ? mag : -mag;
+        
+            if(this.limit_viewport) {
+                
+                this.camera.y = 
+                    Math.min(
+                        this.current_map.height_p - this.viewport.y + this.tile_size,
+                        this.camera.y
+                    );
+                
+                this.camera.y = 
+                    Math.max(
+                        0,
+                        this.camera.y
+                    );
+            }
+        }
+    }
+    
+    if(this.last_tile != tile.id && tile.script) {
+    
+        eval(this.current_map.scripts[tile.script]);
+    }
+    
+    this.last_tile = tile.id;
+};
+
+Clarity.prototype.update_player = function () {
+
+    if (this.key.left) {
+
+        if (this.player.vel.x > -this.current_map.vel_limit.x)
+            this.player.vel.x -= this.current_map.movement_speed.left;
+    }
+
+    if (this.key.up) {
+console.log(this.player.can_jump)
+        if (this.player.can_jump && this.player.vel.y > -this.current_map.vel_limit.y) {
+            console.log(this.player.can_jump)
+            this.player.vel.y -= this.current_map.movement_speed.jump;
+            this.player.can_jump = false;
+        }
+    }
+
+    if (this.key.right) {
+
+        if (this.player.vel.x < this.current_map.vel_limit.x)
+            this.player.vel.x += this.current_map.movement_speed.left;
+    }
+  
+    if (this.key.down) {
+      console.log(this.player.can_jump)
+        if (this.player.can_jump && this.player.vel.y < this.current_map.vel_limit.y) {
+            console.log(this.player.can_jump)
+            this.player.vel.y += -this.current_map.movement_speed.jump;
+            this.player.can_jump = false;
+        }
+    }
+
+    document.addEventListener("keydown", function (event) {
+    if (event.key === "r" || event.key === "R") {
+        game.load_map(level_now);
+    }
+    });
+        
+
+    this.move_player();
+};
+
+Clarity.prototype.draw_player = function (context) {
+
+    context.fillStyle = this.player.colour;
+
+    context.beginPath();
+
+    
+    context.arc(
+        this.player.loc.x + this.tile_size / 2 - this.camera.x,
+        this.player.loc.y + this.tile_size / 2 - this.camera.y,
+        this.tile_size / 2-1, 2, 70
+    );
+    // const centerX = this.player.loc.x + this.tile_size / 2 - this.camera.x;
+    // const centerY = this.player.loc.y + this.tile_size / 2 - this.camera.y;
+    // const size = this.tile_size / 2;
+
+    // context.moveTo(centerX, centerY - size);        // top
+    // context.lineTo(centerX - size, centerY + size); // bottom left
+    // context.lineTo(centerX + size, centerY + size); // bottom right
+
+    context.fill();
+};
+
+Clarity.prototype.update = function () {
+
+    this.update_player();
+};
+
+Clarity.prototype.draw = function (context) {
+
+    this.draw_map(context, false);
+    this.draw_player(context);
+};
+
+/* Configuración del motor */
+
+window.requestAnimFrame =
+  window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  window.oRequestAnimationFrame ||
+  window.msRequestAnimationFrame ||
+  function(callback) {
+    // return window.setTimeout(callback, 0 / 1);
+  };
+
+var canvas = document.getElementById('canvas'),
+    ctx = canvas.getContext('2d');
+
+canvas.width = 400;
+canvas.height = 400;
+
+var game = new Clarity();
+    game.set_viewport(canvas.width, canvas.height);
+    game.load_map(map);
+
+    /* Limita la ventana gráfica a los confines del mapa. */
+    game.limit_viewport = true;
+
+var Loop = function() {
+  
+  ctx.fillStyle = '#333';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  game.update();
+  game.draw(ctx);
+  
+  window.requestAnimFrame(Loop);
+};
+
+Loop();
+</script>
+</body>
