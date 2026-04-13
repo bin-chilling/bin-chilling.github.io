@@ -349,7 +349,7 @@ setInterval(() => {
 
 
 function underwaterf() {
-setInterval(() => { 
+
     if(underwater == 1){  
 
       oxygen -= 1;
@@ -369,11 +369,13 @@ setInterval(() => {
         oxygen = 100
         document.getElementById("oxygen").innerHTML = "Oxygen: " + oxygen + "%"
     }
-}, 175)
+
     
 }
 
-underwaterf();
+setInterval(() => { 
+  underwaterf();
+  }, 175)
 
 // menu.onchange = function(){
 //   console.log("Step 1")
