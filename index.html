@@ -763,7 +763,7 @@ var map4 = {
     tile_size: 25,    
     keys: [
         {id: 0, colour: '#333', solid: 0},
-        {id: 1, colour: '#888', solid: 0, script: 'abovewater'},
+        {id: 1, colour: '#888', solid: 0, script: 'wind'},
         {id: 2,colour: '#555',solid: 1,bounce: 0.35},
         {id: 3,colour: 'rgba(121, 220, 242, 0.4)',friction: {x: 0.9,y: 0.9},gravity: {x: 0,y: 0.1},jump: 1,fore: 1,script: 'underwater'},
         {id: 4,colour: '#777',jump: 1},
@@ -788,6 +788,7 @@ var map4 = {
         {id: 23,colour: '#90CAF9',solid: 1},
         {id: 24,colour: '#FFF9C4',solid: 1},
         {id: 25,colour: '#FFDD16',solid:0,script:'coin'}
+        {id: 26,colour: '#888',solid:0,script:'unair'}
     ],
 
     /* Maps data 0= Black block (solid), 1= air 2= Normal solid block 3= water 4=no collision block (lets you jump multiple times) 5= trampoline 6=same as 4 but it has collision 7=colour changer 8=goal 9=lava 10= same as 2 (become air when switch pressed) 11=switch*/
@@ -869,7 +870,9 @@ var map4 = {
         unlock_red: 'game.current_map.keys[22].solid = 0;game.current_map.keys[22].colour = "#888"; game.current_map.keys[19].solid = 1;game.current_map.keys[19].colour = "#AEF59A";',
         unlock_blue: 'game.current_map.keys[23].solid = 0;game.current_map.keys[23].colour = "#888";game.current_map.keys[20].solid = 1;game.current_map.keys[20].colour = "#90CAF9";',
         unlock_yellow: 'game.current_map.keys[24].solid = 0;game.current_map.keys[24].colour = "#888"; game.current_map.keys[21].solid = 1;game.current_map.keys[21].colour = "#FFF9C4";',
-        coin:  'coins += 1; game.current_map.keys[25].colour = "#888"; game.current_map.keys[25].script = "current_level"; document.getElementById("objective").innerHTML = "Coins × " + coins'
+        coin:  'coins += 1; game.current_map.keys[25].colour = "#888"; game.current_map.keys[25].script = "current_level"; document.getElementById("objective").innerHTML = "Coins × " + coins',
+        wind: 'game.current_map.gravity.x = -0.1'
+        unair: 'game.current_map.gravity.x = 0'
     }
 };
 
